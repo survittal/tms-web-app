@@ -118,7 +118,7 @@ export default function Home() {
 
     if (response) {
       const data = await response.json();
-      console.log("Session ID: ", data.payment_session_id);
+      console.log("Session ID:", data.payment_session_id);
       setSessionID(data.payment_session_id);
     }
   };

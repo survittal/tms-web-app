@@ -1,9 +1,9 @@
 require("dotenv").config();
 import { Cashfree } from "cashfree-pg";
-import { randomBytes } from "crypto";
-import { createHash } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 const EventEmitter = require("events");
+
 EventEmitter.defaultMaxListeners = 15;
 
 Cashfree.XClientId = process.env.Cashfree_ClientId;
@@ -11,11 +11,14 @@ Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
 Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
 
 function generateOrderID() {
+  /*
   const uniqueID = randomBytes(16).toString("hex");
   const hash = createHash("sha256");
   hash.update(uniqueID);
-  const orderID = hash.digest("hex");
-  return orderID.substring(0, 12);
+  const orderID = hash.digest("hex");*/
+
+  const uniqueID = uuidv4();
+  return uniqueID.substring(0, 12);
 }
 
 export async function POST(req) {

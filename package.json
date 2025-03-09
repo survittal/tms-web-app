@@ -11,14 +11,14 @@
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.5",
     "cashfree-pg": "^4.3.10",
-    "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "firebase": "^11.3.0",
     "firebase-admin": "^13.1.0",
     "next": "15.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "postcss": "^8",
