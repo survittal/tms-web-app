@@ -6,7 +6,8 @@ import Image from "next/image";
 import { use, useState } from "react";
 import { getFirestore } from "firebase/firestore";
 import { app } from "./firebaseConfig";
-import { cashfree } from "./util";
+//import { cashfree } from "./util";
+import { load } from "@cashfreepayments/cashfree-js";
 
 import {
   collection,
@@ -20,6 +21,10 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
+
+const cashfree = await load({
+  mode: "sandbox", //sandbox or production
+});
 
 const db = getFirestore(app);
 
