@@ -69,8 +69,8 @@ export async function POST(req, res) {
     return Response.json(
       {
         success: false,
-        message: process.env.Cashfree_ClientId,
-        //error?.response?.data?.message || "Error processing the request.",
+        message:
+          error?.response?.data?.message || "Error processing the request.",
       },
       { status: 500 }
     );
