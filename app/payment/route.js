@@ -1,10 +1,13 @@
-require("dotenv").config();
+//require("dotenv").config();
 import { Cashfree } from "cashfree-pg";
 import { v4 as uuidv4 } from "uuid";
-import { NextResponse } from "next/server";
 
 const EventEmitter = require("events");
-EventEmitter.defaultMaxListeners = 15;
+EventEmitter.defaultMaxListeners = 20;
+
+Cashfree.XClientId = process.env.Cashfree_ClientId;
+Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
+Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
 
 function generateOrderID() {
   /*
@@ -18,13 +21,10 @@ function generateOrderID() {
 }
 
 export async function POST(req, res) {
-  Cashfree.XClientId = process.env.Cashfree_ClientId;
-  Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
-  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
-
   try {
     /*
     const headersList = await headers();
+    console.log(headers);
     const hClientID = headersList.get("ClientID");
     console.log(hClientID);
 */
@@ -69,8 +69,8 @@ export async function POST(req, res) {
     return Response.json(
       {
         success: false,
-        message:
-          error?.response?.data?.message || "Error processing the request.",
+        message: process.env.Cashfree_ClientId,
+        //error?.response?.data?.message || "Error processing the request.",
       },
       { status: 500 }
     );
