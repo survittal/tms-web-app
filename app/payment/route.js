@@ -1,14 +1,10 @@
 require("dotenv").config();
 import { Cashfree } from "cashfree-pg";
 import { v4 as uuidv4 } from "uuid";
+import { NextResponse } from "next/server";
 
 const EventEmitter = require("events");
-
 EventEmitter.defaultMaxListeners = 15;
-
-Cashfree.XClientId = process.env.Cashfree_ClientId;
-Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
-Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
 
 function generateOrderID() {
   /*
@@ -21,7 +17,11 @@ function generateOrderID() {
   return uniqueID.substring(0, 12);
 }
 
-export async function POST(req) {
+export async function POST(req, res) {
+  Cashfree.XClientId = process.env.Cashfree_ClientId;
+  Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
+  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+
   try {
     /*
     const headersList = await headers();
@@ -48,9 +48,31 @@ export async function POST(req) {
     };
 
     const result = await Cashfree.PGCreateOrder("2023-08-01", request);
-    //console.log("Result : ", result.data);
-    return Response.json(result.data);
-  } catch (err) {
-    return Response.json("Error");
+
+    if (result.status == 200) {
+      return Response.json({
+        success: true,
+        message: "Order created successfully!",
+        data: result.data,
+      });
+    } else {
+      return Response.json(
+        {
+          success: false,
+          message: "No response data received from Cashfree.",
+        },
+        { status: 500 }
+      );
+    }
+  } catch (error) {
+    console.error("Error in order creation:", error);
+    return Response.json(
+      {
+        success: false,
+        message:
+          error?.response?.data?.message || "Error processing the request.",
+      },
+      { status: 500 }
+    );
   }
 }
