@@ -6,7 +6,7 @@ import Image from "next/image";
 import { use, useState } from "react";
 import { getFirestore } from "firebase/firestore";
 import { app } from "./firebaseConfig";
-import { cashfree } from "./util";
+import { load } from "@cashfreepayments/cashfree-js";
 
 import {
   collection,
@@ -20,6 +20,11 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
+
+const initializeSDK = async () => {
+  const cashfree = await load({ mode: "sandbox" });
+  return cashfree;
+};
 
 const db = getFirestore(app);
 
@@ -124,6 +129,8 @@ export default function Home() {
   };
 
   const handleRedirect = async () => {
+    const cashfree = await initializeSDK();
+
     let checkoutOptions = {
       paymentSessionId: sessionid,
       returnUrl: "https://sunsoftwares.info",
