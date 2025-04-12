@@ -1,22 +1,10 @@
 "use client";
-
-import Image from "next/image";
-import { useState } from "react";
+import { use, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getFirestore } from "firebase/firestore";
-import { app } from "../firebaseConfig";
-
-import {
-  collection,
-  addDoc,
-  doc,
-  query,
-  where,
-  getDoc,
-  getDocs,
-  updateDoc,
-  orderBy,
-  limit,
-} from "firebase/firestore";
+import { app } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
 
 const db = getFirestore(app);
 
@@ -45,50 +33,15 @@ async function addDatatoFireStore(
   }
 }
 
-const getDocuments = async () => {
-  //console.log("started");
+export default function Register({ params }) {
+  const { id } = use(params);
+  const router = useRouter();
 
-  const dRef = collection(db, "devotees");
-  const q = query(
-    dRef,
-    where("mobileno", "!=", ""),
-    orderBy("mobileno", "desc"),
-    limit(1)
-  );
-  const snapshot = await getDocs(q);
-
-  snapshot.forEach((doc) => {
-    console.log(doc.id);
-  });
-
-  /*
-  [7, 7.5, -7.2345].forEach((myNumber) => {
-    let formattedNumber = myNumber.toLocaleString("en-US", {
-      minimumIntegerDigits: 5,
-      useGrouping: false,
-    });
-    console.log(
-      "Input:    " + myNumber + "\n" + "Output:   " + formattedNumber
-    );
-  });
-  */
-};
-
-const updateDocs = async () => {
-  const docRef = doc(db, "counters", "doc_counters");
-  const qSnap = await getDoc(docRef);
-  const newID = qSnap.data().d_id + 1;
-  console.log(qSnap.data());
-  console.log(newID);
-  await updateDoc(docRef, { d_id: newID });
-};
-
-export default function Home() {
   const [docRef, setDocRef] = useState("");
 
   const [firstname, setfirstname] = useState("");
   const [email, setemail] = useState("");
-  const [mobileno, setmobileno] = useState("");
+  const [mobileno, setmobileno] = useState(id);
   const [pincode, setpincode] = useState("");
   const [address, setaddress] = useState("");
   const [city, setcity] = useState("");
@@ -111,7 +64,7 @@ export default function Home() {
       setpincode("");
       setcity("");
       alert("Data Added Successfully....");
-      alert(r2);
+      router.push("/seva/booking/" + `${r2}`);
     }
   };
 
@@ -163,7 +116,7 @@ export default function Home() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Mobile No"
                 pattern="[0-9]{10}"
-                required
+                disabled
               />
             </div>
             <div>
@@ -197,7 +150,7 @@ export default function Home() {
                 htmlFor="address"
                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Address
+                House/Building Number
               </label>
               <input
                 type="text"
@@ -214,7 +167,7 @@ export default function Home() {
                 htmlFor="city"
                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Area/City
+                Village/Town
               </label>
               <input
                 type="text"
@@ -267,18 +220,20 @@ export default function Home() {
               .
             </label>
           </div>
-          <button
-            type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Submit
-          </button>
-          <button
-            onClick={router.push("/")}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Back to Home
-          </button>
+          <div className="flex flex-row justify-between gap-3">
+            <Link
+              href="/"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Back to Home
+            </Link>
+            <button
+              type="submit"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Register Now
+            </button>
+          </div>
         </form>
       </div>
     </section>
