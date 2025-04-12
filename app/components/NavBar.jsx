@@ -21,7 +21,7 @@ const NavBar = () => {
       <a href="/" className="block text-xl mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
         Thambila Seva Booking
       </a>
-      <a href="/register" className="block text-xl mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+      <a href="/" className="block text-xl mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
         Register
       </a>
       <a href="/" className="block text-xl mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
