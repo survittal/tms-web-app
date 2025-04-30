@@ -48,7 +48,7 @@ export async function POST(req, res) {
         customer_email: data.customer_details.customer_email,
       },
       order_meta: {
-        return_url: `http://localhost:3000/cashfree`,
+        return_url: "https://test.cashfree.com/pgappsdemos/return.php?order_id=order_123",
       },
     };
 
