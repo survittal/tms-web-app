@@ -45,7 +45,7 @@ export default function Booking({ params }) {
   }, []);
 
   const getPayOrder = async (dRef) => {
-    const response = await fetch("/cashfree/payment", {
+    const response = await fetch(process.env.NEXT_PUBLIC_Cashfree_Payment_URL, {
       method: "POST",
       headers: {
         Accept: "application/json",
