@@ -1,4 +1,3 @@
-//require("dotenv").config();
 import { Cashfree } from "cashfree-pg";
 import { v4 as uuidv4 } from "uuid";
 
@@ -7,7 +6,11 @@ EventEmitter.defaultMaxListeners = 20;
 
 Cashfree.XClientId = process.env.Cashfree_ClientId;
 Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
-Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+if (process.env.NEXT_PUBLIC_Cashfree_Env == "sandbox") {
+  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+} else {
+  Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
+}
 
 function generateOrderID() {
   /*
@@ -29,12 +32,15 @@ export async function POST(req, res) {
     console.log(hClientID);
 */
     const data = await req.json();
-    //console.log("Order Amount :", data.orderamount);
+
+    let order_id = generateOrderID();
+
+    console.log(order_id);
 
     let request = {
       order_amount: data.orderamount,
       order_currency: data.order_currency,
-      order_id: generateOrderID(),
+      order_id: order_id,
       customer_details: {
         customer_id: data.customer_details.customer_id,
         customer_phone: data.customer_details.customer_phone,
@@ -42,12 +48,13 @@ export async function POST(req, res) {
         customer_email: data.customer_details.customer_email,
       },
       order_meta: {
-        return_url:
-          "https://www.cashfree.com/devstudio/preview/pg/web/checkout?order_id={order_id}",
+        return_url: process.env.Cashfree_Return_URL,
       },
     };
 
     const result = await Cashfree.PGCreateOrder("2023-08-01", request);
+
+    console.log(result.data);
 
     if (result.status == 200) {
       return Response.json({
