@@ -45,14 +45,14 @@ export default function Booking({ params }) {
   }, []);
 
   const getPayOrder = async (dRef) => {
-    const response = await fetch(process.env.NEXT_PUBLIC_Cashfree_Payment_URL, {
+    const response = await fetch("/cashfree/payment", {
       method: "POST",
       headers: {
         Accept: "application/json",
       },
       body:
         '{"order_currency":"INR","orderamount":' +
-        totalamount +
+        1 +
         ',"customer_details":{"customer_id":"7112AAA812234","customer_phone":"' +
         data.mobileno +
         '","customer_name":"' +
