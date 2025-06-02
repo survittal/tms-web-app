@@ -13,27 +13,15 @@ import {
 } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
 
-const PDFViewer = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFViewer),
-  {
-    ssr: false,
-    loading: () => <p>Loading...</p>,
-  }
-);
+const PDFViewer = dynamic(() => import("./pdfviewer"), {
+  ssr: false,
+});
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((m) => m.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <>Loading...</>,
-  }
-);
-
-//import useRouter from "@/app/components/useRouter";
+const PDFDownloadLink = dynamic(() => import("./pdfDownloadLink"), {
+  ssr: false,
+});
 
 export default function printing() {
-  //console.log(data);
-
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -63,7 +51,6 @@ export default function printing() {
       day: "2-digit",
     });
     const customShortDate = customDateFormatter.format(longDate);
-    //console.log(customShortDate); // Output: "06/01/2025"
     return customShortDate;
   };
 
