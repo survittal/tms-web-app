@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   doc,
+  updateDoc,
   getDoc,
   getDocs,
   where,
@@ -14,7 +15,14 @@ import {
 
 const db = getFirestore(app);
 
-const addDatatoFireStore = async (data) => {
+const addDatatoFireStore = async (
+  firstname,
+  email,
+  mobileno,
+  pincode,
+  address,
+  city
+) => {
   try {
     const docRef = await addDoc(collection(db, "devotees"), {
       firstname: firstname,
@@ -60,15 +68,14 @@ const getDetByMobNo = async (sMobile) => {
 
 const getDetByDocID = async (docID) => {
   try {
-    //console.log("util:", docID);
     const dRef = doc(db, "devotees", docID);
     const snapshot = await getDoc(dRef);
+
     if (snapshot.empty) {
       console.log("No Such Document found ...");
       return 0;
     } else {
-      //console.log(snapshot.data());
-      return snapshot.data();
+      return { id: snapshot.id, ...snapshot.data() };
     }
   } catch (error) {
     console.error("Error while getting data ", error);
@@ -76,4 +83,84 @@ const getDetByDocID = async (docID) => {
   }
 };
 
-export { getDetByMobNo, addDatatoFireStore, getDetByDocID };
+const getSevaDetByDocID = async (parentDocumentId, docID) => {
+  try {
+    const docRef = doc(db, "devotees/" + parentDocumentId + "/sevadet", docID);
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.empty) {
+      return 0;
+    } else {
+      return { id: docSnapshot.id, ...docSnapshot.data() };
+    }
+  } catch (error) {
+    return 0;
+  }
+};
+
+const updateDocument = async (collectionName, documentId, data) => {
+  try {
+    const documentRef = doc(db, collectionName, documentId);
+    await updateDoc(documentRef, data);
+    return { status: 1, msg: "Document updated successfully!" };
+  } catch (error) {
+    return { status: 0, msg: "Error updating document", error };
+  }
+};
+
+const getAllSeva = async (docID) => {
+  try {
+    const dRef = collection(db, "devotees/" + docID + "/sevadet");
+    const q = query(dRef, where("order_status", "==", "Unpaid"));
+    const result = await getDocs(q);
+
+    let data = [];
+
+    if (result.empty) {
+      console.log("No Such Document found ...");
+      return 0;
+    } else {
+      result.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() });
+      });
+      return { data };
+    }
+  } catch (error) {
+    console.error("Error while getting data ", error);
+    return 0;
+  }
+};
+
+const zeroPad = (num, places) => String(num).padStart(places, "0");
+
+const addNewSevaDet = async (id, data) => {
+  try {
+    const docRef1 = doc(db, "counters", "doc_counters");
+    const qSnap = await getDoc(docRef1);
+    const newRNo = qSnap.data().r_no + 1;
+    await updateDoc(docRef1, { r_no: newRNo });
+
+    let rNum;
+    rNum = new Date().getFullYear() + zeroPad(newRNo, 5);
+
+    const docRef = await addDoc(collection(db, "devotees/" + id + "/sevadet"), {
+      receipt_no: rNum,
+      ...data,
+    });
+    console.log("New Ref:", docRef.id);
+    return { id: docRef.id };
+  } catch (error) {
+    console.error("Error occurred", error);
+    return { id: 0 };
+  }
+};
+
+export {
+  getDetByMobNo,
+  addDatatoFireStore,
+  getDetByDocID,
+  getAllSeva,
+  getSevaDetByDocID,
+  updateDocument,
+  addNewSevaDet,
+};

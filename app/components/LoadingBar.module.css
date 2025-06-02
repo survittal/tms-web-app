@@ -1,0 +1,51 @@
+/* LoadingBar.module.css */
+.loading {
+  transition: opacity 0.3s ease-in;
+  opacity: 0;
+  will-change: opacity;
+  position: fixed;
+  height: 20px;
+  width: 100%;
+  left: 0;
+  top: -10px;
+  filter: blur(8px);
+}
+.loading[aria-busy="true"] {
+  opacity: 1;
+  transition-duration: 1s;
+}
+
+.loading::before,
+.loading::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  mix-blend-mode: color;
+  background: 50%/200% repeat-x;
+  animation: 1s ease-in-out infinite alternate;
+}
+.loading::before {
+  background-image: linear-gradient(
+    90deg, transparent, black, transparent
+  );
+  animation-name: loading-rg;
+}
+.loading::after {
+  background-image: linear-gradient(
+    90deg, transparent, white, transparent
+  );
+  animation-name: loading-lt;
+}
+@keyframes loading-lt {
+  from { background-position: 100% 0 }
+  to { background-position: 0% 0 }
+}
+@keyframes loading-rg {
+  from { background-position: 0% 0 }
+  to { background-position: 100% 0 }
+}

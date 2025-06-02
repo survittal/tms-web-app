@@ -1,37 +1,9 @@
 "use client";
+
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getFirestore } from "firebase/firestore";
-import { app } from "../../firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-
-const db = getFirestore(app);
-
-async function addDatatoFireStore(
-  firstname,
-  email,
-  mobileno,
-  pincode,
-  address,
-  city
-) {
-  try {
-    const docRef = await addDoc(collection(db, "devotees"), {
-      firstname: firstname,
-      email: email,
-      mobileno: mobileno,
-      pincode: pincode,
-      address: address,
-      city: city,
-    });
-    console.log("Data Added with Ref ID: ", docRef.id);
-    return [true, docRef.id];
-  } catch (error) {
-    console.error("Error while addding Data ", error);
-    return [false, ""];
-  }
-}
+import { addDatatoFireStore } from "@/app/db/devotee";
 
 export default function Register({ params }) {
   const { id } = use(params);

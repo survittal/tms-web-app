@@ -1,75 +1,33 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { getFirestore } from "firebase/firestore";
-import { app } from "./firebaseConfig";
-
-import {
-  collection,
-  doc,
-  query,
-  where,
-  getDoc,
-  getDocs,
-  updateDoc,
-  orderBy,
-  limit,
-} from "firebase/firestore";
-
-const db = getFirestore(app);
-
-const getDetByMobNo = async (sMobile) => {
-  try {
-    const dRef = collection(db, "devotees");
-    const q = query(
-      dRef,
-      where("mobileno", "==", sMobile),
-      orderBy("mobileno", "desc"),
-      limit(1)
-    );
-    const snapshot = await getDocs(q);
-    let data = [];
-    if (snapshot.empty) {
-      console.log("Mobile Not found...");
-      return 0;
-    } else {
-      snapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() });
-      });
-      return { data };
-    }
-  } catch (error) {
-    console.error("Error while addding Data ", error);
-    return 0;
-  }
-};
+import { getDetByMobNo } from "./db/devotee";
 
 export default function Home() {
   const router = useRouter();
-  const { pending } = useFormStatus();
-
   const [sMobile, setsMobile] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    document.body.style.cursor = "wait";
     const r1 = await getDetByMobNo(sMobile);
-    console.log("result data:", r1);
     if (r1 == 0) {
-      //console.log("Not Registered yet");
       router.push("/register/" + `${sMobile}`);
     } else {
-      //console.log(r1.data[0].id);
-      router.push("/seva/booking/" + `${r1.data[0].id}`);
+      router.replace("/seva/booking/" + `${r1.data[0].id}`);
     }
+    setIsSubmitting(false);
+    document.body.style.cursor = "default";
   };
 
   return (
     <section>
       <div className="flex flex-col bg-white items-center">
         <div className="block mb-1 text-lg font-bold p-2.5">
-          THAMBILA SEVA BOOKING
+          SEVA BOOKING APP
         </div>
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
           <label
@@ -113,8 +71,9 @@ export default function Home() {
           <button
             type="submit"
             className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            disabled={isSubmitting}
           >
-            {pending ? "loading..." : "Continue"}
+            {isSubmitting ? "Processing..." : "Continue"}
           </button>
         </form>
       </div>
