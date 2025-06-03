@@ -19,7 +19,7 @@ export default function Home() {
     } else {
       router.replace("/seva/booking/" + `${r1.data[0].id}`);
     }
-    setIsSubmitting(false);
+    //setIsSubmitting(false);
     document.body.style.cursor = "default";
   };
 
