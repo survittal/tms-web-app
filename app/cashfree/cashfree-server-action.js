@@ -49,6 +49,8 @@ export async function onPay({ id, newData }) {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
+        hour: "numeric",
+        minute: "numeric",
       });
       const customShortDate = customDateFormatter.format(longDate);
       return customShortDate;
@@ -87,7 +89,7 @@ export async function verifyPayment({ order_id }) {
     );
 
     if (result.status == 200) {
-      console.log("Order fetched successfully:", result.data);
+      //console.log("Order fetched successfully:", result.data);
       return {
         success: true,
         message: "Order created successfully!",

@@ -17,11 +17,13 @@ const initializeSDK = async () => {
 export default function PayButton({ id, sData }) {
   const router = useRouter();
   const [ordStatus, setOrdStatus] = useState("Unpaid");
+  const [loading, setLoading] = useState(false);
 
   return (
     <button
       className="w-full mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       onClick={async () => {
+        setLoading(true);
         const ret = await onPay({ id: id, newData: sData });
         try {
           const cashfree = await initializeSDK();
@@ -69,7 +71,7 @@ export default function PayButton({ id, sData }) {
           console.log(error);
         }
       }}
-      disabled={ordStatus === "PAID" ? true : false}
+      disabled={ordStatus === "PAID" || loading === true ? true : false}
     >
       {ordStatus === "PAID" ? "Paid" : "Pay Now"}
     </button>
