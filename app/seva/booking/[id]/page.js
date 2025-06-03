@@ -132,7 +132,7 @@ export default function Booking({ params }) {
                 <form className="w-auto">
                   {sDocRef === "" ? (
                     <div className="grid md:grid-cols-2 gap-5 mb-1">
-                      <div className="flex items-center ps-4 border bg-green-300 border-gray-400 rounded-sm dark:border-gray-700">
+                      <div className="flex items-center ps-4 border bg-orange-300 border-gray-400 rounded-sm dark:border-gray-700">
                         <input
                           defaultChecked
                           id="radio-1"
@@ -149,7 +149,7 @@ export default function Booking({ params }) {
                           Thambila Seva
                         </label>
                       </div>
-                      <div className="flex items-center ps-4 border bg-green-300 border-gray-300 rounded-sm dark:border-gray-700">
+                      <div className="flex items-center ps-4 border bg-orange-300 border-gray-300 rounded-sm dark:border-gray-700">
                         <input
                           id="radio-2"
                           type="radio"
