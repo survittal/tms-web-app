@@ -155,6 +155,30 @@ const addNewSevaDet = async (id, data) => {
   }
 };
 
+const shortDate = (inputDt) => {
+  const longDate = new Date(inputDt);
+  const customDateFormatter = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const customShortDate = customDateFormatter.format(longDate);
+  return customShortDate;
+};
+
+const shortDateTime = (inputDt) => {
+  const longDate = new Date(inputDt);
+  const customDateFormatter = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "numeric",
+  });
+  const customShortDate = customDateFormatter.format(longDate);
+  return customShortDate;
+};
+
 export {
   getDetByMobNo,
   addDatatoFireStore,
@@ -163,4 +187,6 @@ export {
   getSevaDetByDocID,
   updateDocument,
   addNewSevaDet,
+  shortDate,
+  shortDateTime,
 };
