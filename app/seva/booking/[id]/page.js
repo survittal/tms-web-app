@@ -7,6 +7,7 @@ import {
   getAllSeva,
   getSevaDetByDocID,
   addNewSevaDet,
+  shortDate,
 } from "../../../db/devotee";
 import PayButton from "@/app/cashfree/PayButton";
 import { useRouter } from "next/navigation";
@@ -97,7 +98,7 @@ export default function Booking({ params }) {
       total_months: totalmonths,
       total_amount: totalAmount,
       order_status: "Unpaid",
-      bill_date: today.toLocaleDateString(),
+      bill_date: shortDate(today),
     });
     setData({ sevaRefId: newRefId.id, totAmount: totalAmount, ...data });
     setDocRef(newRefId.id);
