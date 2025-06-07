@@ -1,6 +1,6 @@
 "use client";
 
-import { getSevaDetByDocID } from "@/app/db/devotee";
+import { getSevaDetByDocID, shortDate } from "@/app/db/devotee";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -43,17 +43,6 @@ export default function PrintComponent() {
     router.push("/");
   };
 
-  const shortDate = (inputDt) => {
-    const longDate = new Date(inputDt);
-    const customDateFormatter = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    const customShortDate = customDateFormatter.format(longDate);
-    return customShortDate;
-  };
-
   const ReceiptPage = () => (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
@@ -88,7 +77,7 @@ export default function PrintComponent() {
           </View>
           <View style={[styles.section1, { width: "25%" }]}>
             <Text style={{ color: "gray" }}>Receipt Date :</Text>
-            <Text>{shortDate(data.order_date)}</Text>
+            <Text>{shortDate(data.bill_date)}</Text>
           </View>
         </View>
         <View style={[styles.section, { marginBottom: 4 }]}>
