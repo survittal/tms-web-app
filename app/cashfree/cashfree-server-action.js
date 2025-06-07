@@ -2,7 +2,7 @@
 
 import { Cashfree } from "cashfree-pg";
 import { v4 as uuidv4 } from "uuid";
-import { updateDocument } from "../db/devotee";
+import { shortDateTime, updateDocument } from "../db/devotee";
 
 const EventEmitter = require("events");
 EventEmitter.defaultMaxListeners = 20;
@@ -43,25 +43,12 @@ export async function onPay({ id, newData }) {
 
     const result = await Cashfree.PGCreateOrder("2023-08-01", request);
 
-    const shortDate = (inputDt) => {
-      const longDate = new Date(inputDt);
-      const customDateFormatter = new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "numeric",
-        minute: "numeric",
-      });
-      const customShortDate = customDateFormatter.format(longDate);
-      return customShortDate;
-    };
-
     const uResult = await updateDocument(
       "devotees/" + newData.id + "/sevadet",
       newData.sevaRefId,
       {
         order_id: result.data.order_id,
-        order_date: shortDate(result.data.created_at),
+        order_date: shortDateTime(result.data.created_at),
         cust_mob: result.data.customer_details.customer_phone,
         trn_ref: result.data.cf_order_id,
       }
