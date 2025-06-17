@@ -77,7 +77,7 @@ export default function PrintComponent() {
           </View>
           <View style={[styles.section1, { width: "25%" }]}>
             <Text style={{ color: "gray" }}>Receipt Date :</Text>
-            <Text>{shortDate(data.bill_date)}</Text>
+            <Text>{data.bill_date}</Text>
           </View>
         </View>
         <View style={[styles.section, { marginBottom: 4 }]}>
