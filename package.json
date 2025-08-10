@@ -13,8 +13,10 @@
     "@cashfreepayments/cashfree-js": "^1.0.5",
     "@neondatabase/serverless": "^1.0.0",
     "@react-pdf/renderer": "^4.3.0",
+    "@tanstack/react-query": "^5.83.0",
     "axios": "^1.8.3",
     "cashfree-pg": "^4.3.10",
+    "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "firebase": "^11.3.0",
@@ -26,8 +28,9 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-firebase-hooks": "^5.1.1",
-    "react-pdf": "^9.2.1",
+    "react-icons": "^5.5.0",
     "react-usestateref": "^1.0.9",
+    "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
