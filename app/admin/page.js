@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAllDevotees, getDetByDocID } from "../db/devotee";
 import Card from "../components/Card";
 import SearchBar from "../components/SearchBar";
 import Link from "next/link";
 
-export default function AdminPage() {
+function AdminSuspense() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -84,6 +84,16 @@ export default function AdminPage() {
           ))}
         </section>
       </div>
+    </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading search params...</div>}>
+        <AdminSuspense />
+      </Suspense>
     </div>
   );
 }
