@@ -10,12 +10,14 @@ import {
   shortDate,
 } from "../../../db/devotee";
 import PayButton from "@/app/cashfree/PayButton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Booking({ params }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { id } = use(params);
+  //console.log(id);
   const [sevaData, setSevaData] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,14 +29,16 @@ export default function Booking({ params }) {
   const [sevaType, setSevaType] = useState("Thambila");
   const [sevaDesc, setSevaDesc] = useState("Sankramana Thambila");
   const [devoteeName, setDevoteeName] = useState("");
+  const [userLevel, setUserLevel] = useState("0");
 
   useEffect(() => {
     getDetByDocID(id).then(function (result) {
       setData(result);
       setDevoteeName(result.firstname);
+      setUserLevel(result.user_level);
       setLoading(false);
     });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     getAllSeva(id).then(function (rData) {
@@ -44,7 +48,13 @@ export default function Booking({ params }) {
   }, []);
 
   const handleClick = () => {
-    router.push("/");
+    if (userLevel === "0") {
+      router.replace("/");
+    } else {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("id", data.id);
+      router.replace(`/admin?${params.toString()}`);
+    }
   };
 
   const getSevaDetails = (idNum) => {
@@ -91,6 +101,7 @@ export default function Booking({ params }) {
   const addSevaDet = async () => {
     const today = new Date();
     const newRefId = await addNewSevaDet(id, {
+      devotee_id: id,
       devotee_name: devoteeName,
       seva_name: sevaType,
       seva_desc: sevaDesc,
@@ -140,7 +151,7 @@ export default function Booking({ params }) {
                           type="radio"
                           value="Thambila"
                           name="bordered-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                           onChange={(e) => handleOptionChange(e.target.value)}
                         />
                         <label
@@ -156,7 +167,7 @@ export default function Booking({ params }) {
                           type="radio"
                           value="Donation"
                           name="bordered-radio"
-                          className="w-4 h-4 text-blue-300 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-blue-300 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                           onChange={(e) => handleOptionChange(e.target.value)}
                         />
                         <label

@@ -1,0 +1,89 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getAllDevotees, getDetByDocID } from "../db/devotee";
+import Card from "../components/Card";
+import SearchBar from "../components/SearchBar";
+import Link from "next/link";
+
+export default function AdminPage() {
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const [input, setInput] = useState("");
+
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [devotee, setDevotee] = useState([]);
+  const [devoteeName, setDevoteeName] = useState("");
+
+  useEffect(() => {
+    getDetByDocID(id).then(function (result) {
+      setData(result);
+      setDevoteeName(result.firstname);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleClick = () => {
+    router.replace("/seva/booking/" + `${data.id}`);
+  };
+
+  const showData = () => {
+    getAllDevotees("0").then(function (result) {
+      setDevotee(result.data);
+      console.log(result);
+    });
+  };
+
+  function handleChange(e) {
+    setInput(e.target.value);
+  }
+
+  const devoteeList = input
+    ? devotee?.filter((d) =>
+        d.firstname.toLowerCase().includes(input.toLowerCase())
+      )
+    : devotee;
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="block mb-3 text-lg font-bold p-2.5">
+        Welcome <span className="text-blue-700">{devoteeName}</span>
+      </div>
+      <div className="items-center sm:flex space-y-4 sm:space-y-0 sm:space-x-4 rtl:space-x-reverse">
+        <button
+          className="w-full md:w-auto font-bold bg-blue-700 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:bg-blue-300 rounded-lg text-white inline-flex items-center justify-center px-4 py-2.5"
+          onClick={handleClick}
+        >
+          Self Booking
+        </button>
+        <button
+          className="w-full md:w-auto font-bold bg-blue-700 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:bg-blue-300 rounded-lg text-white inline-flex items-center justify-center px-4 py-2.5"
+          onClick={showData}
+        >
+          List Devotees
+        </button>
+        <Link
+          href="/"
+          className="w-full md:w-auto font-bold bg-blue-700 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:bg-blue-300 rounded-lg text-white inline-flex items-center justify-center px-4 py-2.5"
+        >
+          Back to Home
+        </Link>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <h2 className="text-2xl font-semibold mt-4">List of Devotees</h2>
+        <section className="flex w-full justify-center ">
+          <SearchBar onChange={handleChange} value={input} className="" />
+        </section>
+        <section className="flex flex-wrap gap-3 justify-between">
+          {devoteeList?.map((d, i) => (
+            <Card data={d} key={i} />
+          ))}
+        </section>
+      </div>
+    </div>
+  );
+}

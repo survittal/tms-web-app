@@ -24,19 +24,48 @@ const addDatatoFireStore = async (
   city
 ) => {
   try {
+    const fName = firstname;
     const docRef = await addDoc(collection(db, "devotees"), {
       firstname: firstname,
+      firstnamelower: fName.toLowerCase(),
       email: email,
       mobileno: mobileno,
       pincode: pincode,
       address: address,
       city: city,
+      user_level: "0",
     });
-    console.log("Data Added with Ref ID: ", docRef.id);
+    //console.log("Data Added with Ref ID: ", docRef.id);
     return [true, docRef.id];
   } catch (error) {
-    console.error("Error while addding Data ", error);
+    //console.error("Error while addding Data ", error);
     return [false, ""];
+  }
+};
+
+const getAllDevotees = async (sString) => {
+  try {
+    const dRef = collection(db, "devotees");
+    let q = null;
+    if (sString === null) {
+      q = query(dRef, orderBy("firstname"));
+    } else {
+      q = query(dRef, where("user_level", "==", sString), orderBy("firstname"));
+    }
+    const snapshot = await getDocs(q);
+    let data = [];
+    if (snapshot.empty) {
+      //console.log("No Devotees found...");
+      return 0;
+    } else {
+      snapshot.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() });
+      });
+      return { data };
+    }
+  } catch (error) {
+    //console.error("Error while addding Data ", error);
+    return 0;
   }
 };
 
@@ -52,7 +81,7 @@ const getDetByMobNo = async (sMobile) => {
     const snapshot = await getDocs(q);
     let data = [];
     if (snapshot.empty) {
-      console.log("Mobile Not found...");
+      //console.log("Mobile Not found...");
       return 0;
     } else {
       snapshot.forEach((doc) => {
@@ -61,7 +90,7 @@ const getDetByMobNo = async (sMobile) => {
       return { data };
     }
   } catch (error) {
-    console.error("Error while addding Data ", error);
+    //console.error("Error while addding Data ", error);
     return 0;
   }
 };
@@ -72,13 +101,13 @@ const getDetByDocID = async (docID) => {
     const snapshot = await getDoc(dRef);
 
     if (snapshot.empty) {
-      console.log("No Such Document found ...");
+      //console.log("--No Such Document found ...");
       return 0;
     } else {
       return { id: snapshot.id, ...snapshot.data() };
     }
   } catch (error) {
-    console.error("Error while getting data ", error);
+    //console.error("Error while getting data ", error);
     return 0;
   }
 };
@@ -117,7 +146,7 @@ const getAllSeva = async (docID) => {
     let data = [];
 
     if (result.empty) {
-      console.log("No Such Document found ...");
+      //console.log("No Seva Documents found ...");
       return 0;
     } else {
       result.forEach((doc) => {
@@ -126,7 +155,7 @@ const getAllSeva = async (docID) => {
       return { data };
     }
   } catch (error) {
-    console.error("Error while getting data ", error);
+    //console.error("Error while getting data ", error);
     return 0;
   }
 };
@@ -147,10 +176,10 @@ const addNewSevaDet = async (id, data) => {
       receipt_no: rNum,
       ...data,
     });
-    console.log("New Ref:", docRef.id);
+    //console.log("New Ref:", docRef.id);
     return { id: docRef.id };
   } catch (error) {
-    console.error("Error occurred", error);
+    //console.error("Error occurred", error);
     return { id: 0 };
   }
 };
@@ -189,4 +218,5 @@ export {
   addNewSevaDet,
   shortDate,
   shortDateTime,
+  getAllDevotees,
 };

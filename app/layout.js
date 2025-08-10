@@ -3,6 +3,7 @@ import "./globals.css";
 import HeaderPage from "./components/HeaderPage";
 import "./injectAtRoot.js";
 import LoadingBar from "./components/LoadingBar";
+import { LayoutContainer } from "./LayoutContainer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +25,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <HeaderPage />
-        <main className="flex min-h-screen flex-col items-center">
-          <LoadingBar />
-          {children}
-        </main>
-      </body>
+      <LayoutContainer>
+        <body>
+          <HeaderPage />
+          <main className="flex min-h-screen flex-col items-center">
+            <LoadingBar />
+            {children}
+          </main>
+        </body>
+      </LayoutContainer>
     </html>
   );
 }

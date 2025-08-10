@@ -40,7 +40,7 @@ export default function PrintComponent() {
   }, []);
 
   const handleClick = () => {
-    router.push("/");
+    router.replace("/");
   };
 
   const ReceiptPage = () => (
