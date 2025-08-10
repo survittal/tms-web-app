@@ -1,13 +1,12 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { getDetByMobNo } from "./db/devotee";
 import PasswordCheck from "./components/PasswordCheck";
 
 export default function Home() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const mobRef = useRef(null);
 
