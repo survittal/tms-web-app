@@ -107,7 +107,7 @@ export default function Home() {
           ಸಾವಿರದ ಎಂಟು ಸಂಕ್ರಮಣ ತಂಬಿಲ ಸೇವೆ
         </span>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center sm:p-4">
         <div className="grid max-w-sm grid-cols-1 gap-4 items-center">
           <p className="text-justify text-[#046e87] font-semibold">
             ಪ್ರತಿಯೊಬ್ಬರ ಜೀವನದಲ್ಲಿಯೂ ಸಂಕ್ರಮಣ ಪರ್ವ ಬಂದೇ ಬರುತ್ತದೆ. ಕೆಲವರಿಗೆ ಜೀವನದ
