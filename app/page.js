@@ -103,12 +103,12 @@ export default function Home() {
         )}
       </div>
       <div className="flex flex-col items-center">
-        <span className="text-[#87041b] m-4 font-bold text-xl">
+        <span className="text-[#87041b] m-4 font-bold text-xl text-center">
           ಸಾವಿರದ ಎಂಟು ಸಂಕ್ರಮಣ ತಂಬಿಲ ಸೇವೆ
         </span>
       </div>
-      <div className="flex flex-col items-center sm:p-4">
-        <div className="grid max-w-sm grid-cols-1 gap-4 items-center">
+      <div className="items-center">
+        <div className="grid max-w-sm grid-cols-1 gap-4 items-center sm:p-10">
           <p className="text-justify text-[#046e87] font-semibold">
             ಪ್ರತಿಯೊಬ್ಬರ ಜೀವನದಲ್ಲಿಯೂ ಸಂಕ್ರಮಣ ಪರ್ವ ಬಂದೇ ಬರುತ್ತದೆ. ಕೆಲವರಿಗೆ ಜೀವನದ
             ಕೆಲವು ಘಟನೆಗಳ ನಂತರ ಯಶಸ್ವಿನ ಪರ್ವ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಇನ್ನೂ ಕೆಲವರಿಗೆ
