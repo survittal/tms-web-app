@@ -8,7 +8,7 @@ export default function SearchBar({ onChange, className, value }) {
   return (
     <div
       className={cn(
-        "min-w-[300px] w-[500px] ring-2 ring-slate-700 rounded-md flex items-center gap-2 px-2 hover:ring-white focus-within:ring-white  transition-all group ",
+        "md:min-w-[300px] md:w-[500px] w-full ring-2 ring-slate-700 rounded-md flex items-center gap-2 px-2 hover:ring-white focus-within:ring-white  transition-all group ",
         className
       )}
     >
@@ -26,3 +26,4 @@ export default function SearchBar({ onChange, className, value }) {
     </div>
   );
 }
+
