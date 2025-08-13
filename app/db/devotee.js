@@ -69,6 +69,44 @@ const getAllDevotees = async (sString) => {
   }
 };
 
+const getAllDevoteeSeva = async () => {
+  try {
+    const dRef = collection(db, "devotees");
+    let q = query(dRef, orderBy("firstname"));
+    const snapshot = await getDocs(q);
+    let sevadata = [];
+    if (snapshot.empty) {
+      return 0;
+    } else {
+      const combinedData = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          //const dRef = collection(db, "devotees/" + docID + "/sevadet");
+          //const q = query(dRef, orderBy("bill_date"));
+          const subCollectionRef = collection(
+            db,
+            "devotees",
+            doc.id,
+            "sevadet"
+          );
+          const subSnapshot = await getDocs(subCollectionRef);
+          const subCollectionData = subSnapshot.docs.map((subDoc) => ({
+            id: subDoc.id,
+            ...subDoc.data(),
+          }));
+          //console.log(subCollectionData);
+          sevadata.push({ devoteeID: doc.id, sevaDet: subCollectionData }); // Attach subcollection data
+          return subCollectionData;
+        })
+      );
+      //      console.log(sevadata);
+      return { sevadata };
+    }
+  } catch (error) {
+    console.log("catch error");
+    return 0;
+  }
+};
+
 const getDetByMobNo = async (sMobile) => {
   try {
     const dRef = collection(db, "devotees");
@@ -137,6 +175,27 @@ const updateDocument = async (collectionName, documentId, data) => {
   }
 };
 
+const getAllSevas = async (docID) => {
+  try {
+    const dRef = collection(db, "devotees/" + docID + "/sevadet");
+    const q = query(dRef, orderBy("bill_date"));
+    const result = await getDocs(q);
+
+    let data = [];
+
+    if (result.empty) {
+      return 0;
+    } else {
+      result.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() });
+      });
+      return { data };
+    }
+  } catch (error) {
+    return 0;
+  }
+};
+
 const getAllSeva = async (docID) => {
   try {
     const dRef = collection(db, "devotees/" + docID + "/sevadet");
@@ -146,7 +205,6 @@ const getAllSeva = async (docID) => {
     let data = [];
 
     if (result.empty) {
-      //console.log("No Seva Documents found ...");
       return 0;
     } else {
       result.forEach((doc) => {
@@ -155,7 +213,6 @@ const getAllSeva = async (docID) => {
       return { data };
     }
   } catch (error) {
-    //console.error("Error while getting data ", error);
     return 0;
   }
 };
@@ -219,4 +276,5 @@ export {
   shortDate,
   shortDateTime,
   getAllDevotees,
+  getAllDevoteeSeva,
 };
