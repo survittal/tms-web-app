@@ -120,11 +120,13 @@ export default function Booking({ params }) {
       setTotalmonths(1);
       let totAmt = 200;
       setSevaPrice(200);
+      setSevaDesc("Sankramana Thambila");
       setTotalamount(totAmt.toFixed(2));
     } else {
       setTotalmonths(1);
       let totAmt = 1000;
       setSevaPrice(1000);
+      setSevaDesc("Bhoo Dhana Donation");
       setTotalamount(totAmt.toFixed(2));
     }
     setSevaType(value);
@@ -346,3 +348,4 @@ export default function Booking({ params }) {
     </section>
   );
 }
+
