@@ -91,3 +91,31 @@ export async function verifyPayment({ order_id }) {
   }
   //const data = await getDataForId(id);
 }
+
+export async function getPaymentStatus({ order_id }) {
+  const url = `https://api.cashfree.com/pg/orders/${order_id}`;
+  const options = {
+    method: "GET",
+    headers: {
+      "x-api-version": "2023-08-01",
+      "x-client-id": process.env.Cashfree_ClientId,
+      "x-client-secret": process.env.Cashfree_ClientSecret,
+    },
+    body: undefined,
+  };
+
+  try {
+    const response = await fetch(url, options);
+    const rdata = await response.json();
+    //    console.log("result:", rdata);
+    return {
+      success: true,
+      message: "Order created successfully!",
+      data: rdata,
+    };
+  } catch (error) {
+    return { success: false };
+  }
+}
+
+
