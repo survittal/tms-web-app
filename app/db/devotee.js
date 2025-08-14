@@ -80,8 +80,6 @@ const getAllDevoteeSeva = async () => {
     } else {
       const combinedData = await Promise.all(
         snapshot.docs.map(async (doc) => {
-          //const dRef = collection(db, "devotees/" + docID + "/sevadet");
-          //const q = query(dRef, orderBy("bill_date"));
           const subCollectionRef = collection(
             db,
             "devotees",
@@ -277,4 +275,5 @@ export {
   shortDateTime,
   getAllDevotees,
   getAllDevoteeSeva,
+  getAllSevas,
 };
