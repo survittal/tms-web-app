@@ -1,6 +1,7 @@
+import Link from "next/link";
 import React from "react";
 
-const Card = ({ data }) => {
+const Card = ({ data, onClick }) => {
   return (
     <div className="w-full mx-4 p-4 text-center bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
       <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
@@ -12,6 +13,7 @@ const Card = ({ data }) => {
       <div className="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4 rtl:space-x-reverse px-4">
         <a
           href="#"
+          onClick={onClick}
           className="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 text-white rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
         >
           <svg
