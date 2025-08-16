@@ -12,7 +12,7 @@ const EventEmitter = require("events");
 EventEmitter.defaultMaxListeners = 20;
 
 const cashfree = new Cashfree(
-  CFEnvironment.SANDBOX,
+  CFEnvironment.PRODUCTION,
   process.env.Cashfree_ClientId,
   process.env.Cashfree_ClientSecret
 );
@@ -155,3 +155,4 @@ export async function ValidatePayments() {
     return { success: false };
   }
 }
+
