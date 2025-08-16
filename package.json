@@ -15,7 +15,7 @@
     "@react-pdf/renderer": "^4.3.0",
     "@tanstack/react-query": "^5.83.0",
     "axios": "^1.8.3",
-    "cashfree-pg": "^4.3.10",
+    "cashfree-pg": "^5.0.8",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
