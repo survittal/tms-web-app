@@ -2,21 +2,32 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getAllDevotees, getAllSevas, getDetByDocID } from "../db/devotee";
+import {
+  getAllDevotees,
+  getAllDevoteeSeva,
+  getAllSevas,
+  getDetByDocID,
+  updateDocument,
+} from "../db/devotee";
 import Card from "../components/Card";
 import SearchBar from "../components/SearchBar";
 import Link from "next/link";
 import Modal from "../components/Modal";
 import SevaTable from "../components/SevaTable";
+import {
+  getPaymentStatus,
+  ValidatePayments,
+} from "../cashfree/cashfree-server-action";
 
 function AdminSuspense() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const [input, setInput] = useState("");
 
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [working, setWorking] = useState(false);
   const [data, setData] = useState([]);
   const [devotee, setDevotee] = useState([]);
   const [sevaList, setSevaList] = useState([]);
@@ -56,17 +67,19 @@ function AdminSuspense() {
     : devotee;
 
   const handleCardClick = (dtID) => {
-    //console.log(`Card "${cardTitle}" was clicked!`);
     setDId(dtID);
     getAllSevas(dtID).then(function (result) {
       setSevaList(result.data);
-      console.log(result);
       setIsModalOpen(true);
     });
+  };
 
-    //    showSevaList(dtID);
-    // You can perform any action here, like navigating to a new page,
-    // updating state, or making an API call.
+  const CheckPayments = () => {
+    setWorking(true);
+    ValidatePayments().then(function (result) {
+      console.log("finished", result.success);
+      setWorking(false);
+    });
   };
 
   return (
@@ -86,6 +99,13 @@ function AdminSuspense() {
           onClick={showData}
         >
           List Devotees
+        </button>
+        <button
+          className="w-full md:w-auto font-bold bg-blue-700 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:bg-blue-300 rounded-lg text-white inline-flex items-center justify-center px-4 py-2.5"
+          onClick={CheckPayments}
+          disabled={working}
+        >
+          {working === true ? "Processing..." : "Verify Payments"}
         </button>
         <Link
           href="/"
