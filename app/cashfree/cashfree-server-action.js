@@ -1,12 +1,23 @@
 "use server";
 
-import { Cashfree } from "cashfree-pg";
+import { Cashfree, CFEnvironment } from "cashfree-pg";
 import { v4 as uuidv4 } from "uuid";
-import { shortDateTime, updateDocument } from "../db/devotee";
+import {
+  shortDateTime,
+  updateDocument,
+  getAllDevoteeSeva,
+} from "../db/devotee";
 
 const EventEmitter = require("events");
 EventEmitter.defaultMaxListeners = 20;
 
+const cashfree = new Cashfree(
+  CFEnvironment.SANDBOX,
+  process.env.Cashfree_ClientId,
+  process.env.Cashfree_ClientSecret
+);
+
+/*
 Cashfree.XClientId = process.env.Cashfree_ClientId;
 Cashfree.XClientSecret = process.env.Cashfree_ClientSecret;
 if (process.env.NEXT_PUBLIC_Cashfree_Env == "sandbox") {
@@ -19,15 +30,13 @@ function generateOrderID() {
   const uniqueID = uuidv4();
   return uniqueID.substring(0, 12);
 }
+*/
 
 export async function onPay({ id, newData }) {
-  let order_id = generateOrderID();
-
   try {
     let request = {
       order_amount: `${newData.totAmount}`,
       order_currency: "INR",
-      order_id: order_id,
       customer_details: {
         customer_id: `${newData.empid}`,
         customer_phone: `${newData.mobileno}`,
@@ -39,9 +48,11 @@ export async function onPay({ id, newData }) {
         notify_url:
           "https://easyapi.sunsofttech.in/tms-web-app/cashfree-pg/mywebhook.php",
       },
+      order_note: "",
     };
 
-    const result = await Cashfree.PGCreateOrder("2023-08-01", request);
+    const result = await cashfree.PGCreateOrder(request);
+    //console.log(result);
 
     const uResult = await updateDocument(
       "devotees/" + newData.id + "/sevadet",
@@ -53,9 +64,8 @@ export async function onPay({ id, newData }) {
         trn_ref: result.data.cf_order_id,
       }
     );
-
     return {
-      OrderID: order_id,
+      OrderID: result.data.order_id,
       documentId: id,
       payment_session_id: result.data.payment_session_id,
     };
@@ -65,18 +75,13 @@ export async function onPay({ id, newData }) {
 }
 
 export async function verifyPayment({ order_id }) {
-  let version = "2023-08-01";
-
+  //let version = "2023-08-01";
   try {
-    const result = await Cashfree.PGFetchOrder(version, order_id).catch(
-      (error) => {
-        console.error("Error:", error.message);
-        return { success: false };
-      }
-    );
+    const result = await cashfree.PGFetchOrder(order_id).catch((error) => {
+      return { success: false };
+    });
 
     if (result.status == 200) {
-      //console.log("Order fetched successfully:", result.data);
       return {
         success: true,
         message: "Order created successfully!",
@@ -86,10 +91,8 @@ export async function verifyPayment({ order_id }) {
       return { success: false };
     }
   } catch (error) {
-    console.error("Error in order creation:", error);
     return { success: false };
   }
-  //const data = await getDataForId(id);
 }
 
 export async function getPaymentStatus({ order_id }) {
@@ -97,7 +100,7 @@ export async function getPaymentStatus({ order_id }) {
   const options = {
     method: "GET",
     headers: {
-      "x-api-version": "2023-08-01",
+      "x-api-version": "2025-01-01",
       "x-client-id": process.env.Cashfree_ClientId,
       "x-client-secret": process.env.Cashfree_ClientSecret,
     },
@@ -107,7 +110,6 @@ export async function getPaymentStatus({ order_id }) {
   try {
     const response = await fetch(url, options);
     const rdata = await response.json();
-    //    console.log("result:", rdata);
     return {
       success: true,
       message: "Order created successfully!",
@@ -118,4 +120,38 @@ export async function getPaymentStatus({ order_id }) {
   }
 }
 
-
+export async function ValidatePayments() {
+  try {
+    getAllDevoteeSeva().then(function (result) {
+      result.sevadata.map(async (item) => {
+        let oStatus = "";
+        item.sevaDet.map(
+          async (sItem) =>
+            await getPaymentStatus({ order_id: sItem.order_id }).then(function (
+              resultNew
+            ) {
+              //console.log(resultNew);
+              if (resultNew.success === true) {
+                if (resultNew.data.order_status != "PAID") {
+                  oStatus = "Unpaid";
+                } else {
+                  oStatus = "PAID";
+                }
+                const uResult = updateDocument(
+                  "devotees/" + item.devoteeID + "/sevadet",
+                  sItem.id,
+                  {
+                    order_status: oStatus,
+                  }
+                );
+              }
+            })
+        );
+      });
+    });
+    return { success: true };
+  } catch (error) {
+    console.log("error while reading", error);
+    return { success: false };
+  }
+}
